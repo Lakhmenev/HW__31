@@ -17,7 +17,7 @@ class AdEditPermission(BasePermission):
         except Ad.DoesNotExist:
             raise Http404
 
-        if ad.author_id == request.user.id:
+        if ad.author.id == request.user.id:
             return True
         return False
 

@@ -1,6 +1,4 @@
 from rest_framework import serializers
-
-from ads.serializers import AdSerializer
 from selections.models import Selection
 
 
@@ -11,7 +9,10 @@ class SelectionListSerializer(serializers.ModelSerializer):
 
 
 class SelectionDetailSerializer(serializers.ModelSerializer):
-    items = AdSerializer(many=True)
+    items = serializers.SlugRelatedField(
+        read_only=True,
+        many=True,
+        slug_field="name")
 
     class Meta:
         model = Selection
