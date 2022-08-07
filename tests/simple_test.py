@@ -1,2 +1,5 @@
-def test_first():
-    assert True
+def test_root(client):
+    response = client.get("/")
+
+    assert response.status_code == 200
+

@@ -1,20 +1,7 @@
-from datetime import date
-
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
 from django.db import models
+from authentication.validators import nine_years_older, except_rambler
 from locations.models import Location
-
-
-def nine_years_older(value):
-    if (date.today().year - value.year) < 9:
-        raise ValidationError("Your age must be over 9 years old.")
-
-
-def except_rambler(value):
-    domain_name = value.split('@')
-    if 'rambler' in domain_name[1]:
-        raise ValidationError("Registration with Rambler is prohibited.")
 
 
 class User(AbstractUser):

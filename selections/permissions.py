@@ -28,6 +28,6 @@ class SelectionEditPermission(BasePermission):
         except Selection.DoesNotExist:
             raise Http404
 
-        if selection.owner.id == request.user.id:
+        if selection.owner_id == request.user.id:
             return True
         return False
