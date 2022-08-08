@@ -1,6 +1,6 @@
 import pytest
 
-from ads.serializers import AdSerializer
+from ads.serializers import AdDetailSerializer
 
 
 @pytest.mark.django_db
@@ -12,4 +12,4 @@ def test_ad_retrieve(client, ad, user_token):
     )
 
     assert response.status_code == 200
-    assert response.data == AdSerializer(ad).data
+    assert response.data == AdDetailSerializer(ad).data
