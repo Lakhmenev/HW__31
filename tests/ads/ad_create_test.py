@@ -10,7 +10,7 @@ def test_ad_create(client, category, user):
         "/ad/create/",
         {
             "name": "test ad name",
-            "author": user.id,
+            "author_id": user.id,
             "price": 550,
             "description": "test description",
             "is_published": False,
@@ -21,13 +21,13 @@ def test_ad_create(client, category, user):
 
     expected_response = {
         "id": 2,
-        "name": "test ad name",
+        "name": "test name",
         "price": 550,
         "description": "test_description",
         "is_published": False,
         "image": ad.image.url if ad.image else None,
         "category": category.id,
-        "author": user.id,
+        "author_id": '',
     }
 
     assert response.status_code == 201

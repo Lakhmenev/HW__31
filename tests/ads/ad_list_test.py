@@ -24,7 +24,7 @@ def test_ads_list(client):
 
     expected_response = {
         "items": ads,
-        "num_pages": 1,
+        "num_page": 1,
         "total": 5,
     }
 

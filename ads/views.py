@@ -1,20 +1,15 @@
-import json
-
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, CreateView, UpdateView
-from rest_framework.generics import RetrieveAPIView, UpdateAPIView, DestroyAPIView
+from django.views.generic import ListView, UpdateView
+from rest_framework.generics import RetrieveAPIView, UpdateAPIView, DestroyAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from ads import settings
 from ads.models import Ad
 from ads.permissions import AdEditPermission
-from ads.serializers import AdDetailSerializer, AdDestroySerializer
-from authentication.models import User
-from categories.models import Category
+from ads.serializers import AdDetailSerializer, AdDestroySerializer, AdSerializer
 
 
 def ads(request):
@@ -78,39 +73,44 @@ class AdDetailView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, AdEditPermission]
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class AdCreateView(CreateView):
-    model = Ad
-    fields = ["name", "author", "price", "description", "is_published", "category"]
-
-    def post(self, request, *args, **kwargs):
-        ad_data = json.loads(request.body)
-
-        author = get_object_or_404(User, ad_data["author_id"])
-        category = get_object_or_404(Category, ad_data["category_id"])
-
-        ad = Ad.objects.create(
-            name=ad_data["name"],
-            author=author,
-            price=ad_data["price"],
-            description=ad_data["description"],
-            is_published=ad_data["is_published"],
-            category=category,
-        )
-
-        return JsonResponse({
-            "id": ad.id,
-            "name": ad.name,
-            "author_id": ad.author_id,
-            "author": ad.author.first_name,
-            "price": ad.price,
-            "description": ad.description,
-            "is_published": ad.is_published,
-            "category_id": ad.category_id,
-            "image": ad.image.url if ad.image else None,
-        })
-
+class AdCreateView(CreateAPIView):
+    queryset = Ad.objects.all()
+    serializer_class = AdSerializer
     permission_classes = [IsAuthenticated]
+
+# @method_decorator(csrf_exempt, name='dispatch')
+# class AdCreateView(CreateView):
+#     model = Ad
+#     fields = ["name", "author", "price", "description", "is_published", "category"]
+#
+#     def post(self, request, *args, **kwargs):
+#         ad_data = json.loads(request.body)
+#
+#         author = get_object_or_404(User, ad_data["author_id"])
+#         category = get_object_or_404(Category, ad_data["category_id"])
+#
+#         ad = Ad.objects.create(
+#             name=ad_data["name"],
+#             author=author,
+#             price=ad_data["price"],
+#             description=ad_data["description"],
+#             is_published=ad_data["is_published"],
+#             category=category,
+#         )
+#
+#         return JsonResponse({
+#             "id": ad.id,
+#             "name": ad.name,
+#             "author_id": ad.author_id,
+#             "author": ad.author.first_name,
+#             "price": ad.price,
+#             "description": ad.description,
+#             "is_published": ad.is_published,
+#             "category_id": ad.category_id,
+#             "image": ad.image.url if ad.image else None,
+#         })
+#
+#     permission_classes = [IsAuthenticated]
 
 
 class AdUpdateView(UpdateAPIView):

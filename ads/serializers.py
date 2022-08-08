@@ -17,7 +17,8 @@ class AdDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ad
-        fields = ["id", "name", "author_id", "author", "price", "description", "is_published", "category_id", "image"]
+        fields = '__all__'
+        # fields = ["id", "name", "author_id", "author", "price", "description", "is_published", "category_id", "image"]
 
 
 class AdDestroySerializer(serializers.ModelSerializer):
