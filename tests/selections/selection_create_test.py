@@ -4,7 +4,7 @@ import pytest
 @pytest.mark.django_db
 def test_selection_create(client, user_token, user, ad):
     response = client.post(
-        "selections/create/",
+        "/selection/create/",
         {
             "name": "test selections name",
             "owner": user.id,
