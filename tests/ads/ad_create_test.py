@@ -3,31 +3,34 @@ from tests.factories import AdFactory
 
 
 @pytest.mark.django_db
-def test_ad_create(client, category, user):
+def test_ad_create(client, category, user, user_token):
     ad = AdFactory.create()
 
     response = client.post(
         "/ad/create/",
         {
-            "name": "test ad name",
+            "name": "test name ad",
+            "author": user.username,
             "author_id": user.id,
             "price": 550,
             "description": "test description",
             "is_published": False,
             "category": category.id
         },
-        content_type="application/json"
+        content_type="application/json",
+        HTTP_AUTHORIZATION=f"Bearer {user_token}"
     )
 
     expected_response = {
         "id": 2,
-        "name": "test name",
+        "name": "test name ad",
         "price": 550,
         "description": "test_description",
         "is_published": False,
         "image": ad.image.url if ad.image else None,
         "category": category.id,
-        "author_id": '',
+        "author": user.username,
+        "author_id": user.id,
     }
 
     assert response.status_code == 201
